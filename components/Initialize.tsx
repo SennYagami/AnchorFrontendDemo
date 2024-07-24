@@ -1,56 +1,39 @@
-import {
-  useConnection,
-  useWallet,
-  useAnchorWallet,
-} from "@solana/wallet-adapter-react"
-import * as anchor from "@project-serum/anchor"
-import { FC, useEffect, useState } from "react"
-import idl from "../idl.json"
-import { Button } from "@chakra-ui/react"
-
-const PROGRAM_ID = new anchor.web3.PublicKey(
-  `9sMy4hnC9MML6mioESFZmzpntt3focqwUq1ymPgbMf64`
-)
+import { useConnection, useWallet, useAnchorWallet } from "@solana/wallet-adapter-react";
+import * as anchor from "@project-serum/anchor";
+import { FC, useEffect, useState } from "react";
+import { Button } from "@chakra-ui/react";
+import { Connection, clusterApiUrl } from "@solana/web3.js";
+import { AnchorProvider, Idl, Program } from "@coral-xyz/anchor";
+import idl from "../assets/bond.json";
+import { ethers } from "ethers";
 
 export interface Props {
-  setCounter
-  setTransactionUrl
+  setTransactionUrl;
 }
 
-export const Initialize: FC<Props> = ({ setCounter, setTransactionUrl }) => {
-  const [program, setProgram] = useState<anchor.Program>()
+export const Initialize: FC<Props> = ({ setTransactionUrl }) => {
+  const [program, setProgram] = useState<Program>();
 
-  const { connection } = useConnection()
-  const wallet = useAnchorWallet()
+  const { connection } = useConnection();
+  const wallet = useAnchorWallet();
 
   useEffect(() => {
-    let provider: anchor.Provider
+    let provider: AnchorProvider;
 
-    try {
-      provider = anchor.getProvider()
-    } catch {
-      provider = new anchor.AnchorProvider(connection, wallet, {})
-      anchor.setProvider(provider)
-    }
+    provider = new AnchorProvider(connection, wallet, {});
+    anchor.setProvider(provider);
 
-    const program = new anchor.Program(idl as anchor.Idl, PROGRAM_ID)
-    setProgram(program)
-  }, [])
+    const program = new Program(idl as Idl, provider);
+
+    setProgram(program);
+  }, [connection, wallet]);
 
   const onClick = async () => {
-    const newAccount = anchor.web3.Keypair.generate()
+    const msg = ethers.getBytes(ethers.keccak256(ethers.toUtf8Bytes("Hello")));
+    const sig = await program.methods.verifyCallWithParam2([...msg]).rpc();
 
-    const sig = await program.methods
-      .initialize()
-      .accounts({
-        counter: newAccount.publicKey,
-      })
-      .signers([newAccount])
-      .rpc()
+    setTransactionUrl(`https://explorer.solana.com/tx/${sig}?cluster=devnet`);
+  };
 
-    setTransactionUrl(`https://explorer.solana.com/tx/${sig}?cluster=devnet`)
-    setCounter(newAccount.publicKey)
-  }
-
-  return <Button onClick={onClick}>Initialize Counter</Button>
-}
+  return <Button onClick={onClick}>Send Tx</Button>;
+};

@@ -1,0 +1,258 @@
+{
+  "address": "J3VFbbhE9YBwELdnHS7Shg7QkjtZDoxaBpKFCcr6EDax",
+  "metadata": {
+    "name": "bond",
+    "version": "0.1.0",
+    "spec": "0.1.0",
+    "description": "Created with Anchor"
+  },
+  "instructions": [
+    {
+      "name": "bond",
+      "discriminator": [
+        18,
+        108,
+        96,
+        244,
+        162,
+        35,
+        142,
+        202
+      ],
+      "accounts": [
+        {
+          "name": "bond",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  98,
+                  111,
+                  110,
+                  100
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "signer"
+              }
+            ]
+          }
+        },
+        {
+          "name": "signer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "message",
+          "type": {
+            "array": [
+              "u8",
+              32
+            ]
+          }
+        },
+        {
+          "name": "signature",
+          "type": {
+            "array": [
+              "u8",
+              65
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "initialize_verification",
+      "discriminator": [
+        128,
+        22,
+        164,
+        95,
+        180,
+        128,
+        48,
+        21
+      ],
+      "accounts": [
+        {
+          "name": "verification",
+          "writable": true
+        },
+        {
+          "name": "signer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "_seed",
+          "type": {
+            "array": [
+              "u8",
+              32
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "verify_call",
+      "discriminator": [
+        229,
+        34,
+        131,
+        90,
+        163,
+        68,
+        94,
+        30
+      ],
+      "accounts": [
+        {
+          "name": "signer",
+          "signer": true
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "verify_call_with_param",
+      "discriminator": [
+        73,
+        126,
+        236,
+        80,
+        86,
+        222,
+        247,
+        60
+      ],
+      "accounts": [
+        {
+          "name": "signer",
+          "signer": true
+        }
+      ],
+      "args": [
+        {
+          "name": "_msg",
+          "type": {
+            "array": [
+              "u8",
+              32
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "verify_call_with_param_2",
+      "discriminator": [
+        20,
+        77,
+        142,
+        55,
+        28,
+        218,
+        247,
+        16
+      ],
+      "accounts": [],
+      "args": [
+        {
+          "name": "_msg",
+          "type": {
+            "array": [
+              "u8",
+              32
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "accounts": [
+    {
+      "name": "Bond",
+      "discriminator": [
+        224,
+        128,
+        48,
+        251,
+        182,
+        246,
+        111,
+        196
+      ]
+    },
+    {
+      "name": "Verification",
+      "discriminator": [
+        230,
+        33,
+        140,
+        88,
+        132,
+        240,
+        116,
+        178
+      ]
+    }
+  ],
+  "types": [
+    {
+      "name": "Bond",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "message",
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "signature",
+            "type": {
+              "array": [
+                "u8",
+                65
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "Verification",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "owner",
+            "type": "pubkey"
+          }
+        ]
+      }
+    }
+  ]
+}
